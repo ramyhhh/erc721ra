@@ -217,6 +217,13 @@ contract ERC721RA is Context, ERC165, IERC721, IERC721Metadata, Ownable {
     }
 
     /**
+     * @dev Returns the price can be refunded to owner
+     */
+    function refundiblePrice(uint256 tokenId) public view virtual returns (uint256) {
+        return pricePaid(tokenId);
+    }
+
+    /**
      * @dev Returns the number of tokens minted by `owner`.
      */
     function _numberMinted(address owner) internal view returns (uint256) {
@@ -797,7 +804,7 @@ contract ERC721RA is Context, ERC165, IERC721, IERC721Metadata, Ownable {
         if (_tokenData[tokenId].burned) revert RefundTokenHasBeenBurned();
         if (_tokenData[tokenId].refunded) revert RefundHasAlreadyBeenMade();
 
-        uint256 refundAmount = pricePaid(tokenId);
+        uint256 refundAmount = refundiblePrice(tokenId);
 
         if (refundAmount == 0) revert RefundZeroAmount();
 
